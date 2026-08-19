@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISP Billing - Super Admin</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+  background:#f1f5f9;
+  font-family:Arial,sans-serif;
+}
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 5px 20px #0001;
+}
+input,select{
+  width:100%;
+  padding:11px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+}
+button{
+  border-radius:10px;
+  padding:10px 15px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginPage"
+class="min-h-screen flex items-center justify-center p-5">
+
+<div class="card w-full max-w-md text-center">
+
+<div class="text-5xl mb-4">👑</div>
+
+<h1 class="text-3xl font-bold">
+ISP Super Admin
+</h1>
+
+<p class="text-gray-500 mt-2 mb-6">
+Dealer & License Management
+</p>
+
+<button
+id="googleLogin"
+class="w-full bg-black text-white">
+
+Continue with Google
+
+</button>
+
+<p
+id="loginError"
+class="text-red-500 text-sm mt-4">
+</p>
+
+</div>
+</div>
+
+
+<!-- ADMIN -->
+
+<div id="adminPanel"
+class="hidden">
+
+<header class="bg-white border-b p-4">
+
+<div class="max-w-7xl mx-auto
+flex justify-between items-center">
+
+<div>
+
+<h1 class="text-xl font-bold">
+👑 ISP Super Admin
+</h1>
+
+<p
+id="adminEmail"
+class="text-sm text-gray-500">
+</p>
+
+</div>
+
+<button
+id="logout"
+class="bg-red-500 text-white">
+
+Logout
+
+</button>
+
+</div>
+
+</header>
+
+
+<main class="max-w-7xl mx-auto p-4">
+
+
+<!-- STATS -->
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+
+<div class="card">
+
+<p class="text-gray-500">
+Total Dealers
+</p>
+
+<h2
+id="totalDealers"
+class="text-3xl font-bold">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<p class="text-gray-500">
+Active
+</p>
+
+<h2
+id="activeDealers"
+class="text-3xl font-bold text-green-600">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<p class="text-gray-500">
+Suspended
+</p>
+
+<h2
+id="suspendedDealers"
+class="text-3xl font-bold text-red-600">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<p class="text-gray-500">
+Expiring
+</p>
+
+<h2
+id="expiringDealers"
+class="text-3xl font-bold text-orange-500">
+0
+</h2>
+
+</div>
+
+</div>
+
+
+<!-- CREATE DEALER -->
+
+<div class="card mb-5">
+
+<h2 class="text-xl font-bold mb-4">
+➕ Create Dealer
+</h2>
+
+<div class="grid md:grid-cols-3 gap-3">
+
+<input
+id="dealerName"
+placeholder="Dealer Name">
+
+<input
+id="dealerEmail"
+type="email"
+placeholder="Dealer Gmail">
+
+<input
+id="dealerPhone"
+placeholder="Phone">
+
+<input
+id="dealerCompany"
+placeholder="Company / ISP Name">
+
+<input
+id="dealerLimit"
+type="number"
+value="100"
+placeholder="Customer Limit">
+
+<select id="dealerMonths">
+
+<option value="1">
+1 Month
+</option>
+
+<option value="3">
+3 Months
+</option>
+
+<option value="6">
+6 Months
+</option>
+
+<option value="12"
+selected>
+12 Months
+</option>
+
+<option value="24">
+24 Months
+</option>
+
+</select>
+
+<select id="dealerStatus">
+
+<option value="active">
+Active
+</option>
+
+<option value="suspended">
+Suspended
+</option>
+
+</select>
+
+</div>
+
+
+<button
+id="createDealer"
+class="bg-blue-600 text-white mt-4">
+
+Create Dealer + Generate License
+
+</button>
+
+</div>
+
+
+<!-- GENERATED LICENSE -->
+
+<div
+id="licenseBox"
+class="hidden card mb-5">
+
+<h2 class="text-xl font-bold">
+🔑 New License Created
+</h2>
+
+<div
+id="newLicense"
+class="text-2xl font-bold
+bg-gray-100 p-4 rounded-xl mt-3">
+</div>
+
+<p
+id="licenseDealer"
+class="mt-3">
+</p>
+
+<button
+id="copyLicense"
+class="bg-green-600 text-white mt-3">
+
+Copy License Key
+
+</button>
+
+</div>
+
+
+<!-- DEALERS -->
+
+<div class="card">
+
+<div
+class="flex justify-between
+items-center mb-4">
+
+<h2 class="text-xl font-bold">
+👥 All Dealers
+</h2>
+
+<input
+id="search"
+class="max-w-xs"
+placeholder="Search Dealer">
+
+</div>
+
+
+<div class="overflow-x-auto">
+
+<table class="w-full text-sm">
+
+<thead>
+
+<tr class="border-b">
+
+<th class="p-3 text-left">
+Dealer
+</th>
+
+<th class="p-3 text-left">
+Email
+</th>
+
+<th class="p-3 text-left">
+License
+</th>
+
+<th class="p-3 text-left">
+Expiry
+</th>
+
+<th class="p-3 text-left">
+Limit
+</th>
+
+<th class="p-3 text-left">
+Status
+</th>
+
+<th class="p-3">
+Actions
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="dealerTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- FUTURE FEATURES -->
+
+<div class="card mt-5">
+
+<h2 class="text-xl font-bold mb-4">
+⚙️ Future Features
+</h2>
+
+<div class="grid md:grid-cols-2 gap-3">
+
+<label class="flex items-center gap-3">
+<input
+type="checkbox"
+id="featureWhatsApp">
+WhatsApp Notifications
+</label>
+
+<label class="flex items-center gap-3">
+<input
+type="checkbox"
+id="featureReports">
+Advanced Reports
+</label>
+
+<label class="flex items-center gap-3">
+<input
+type="checkbox"
+id="featureMikrotik">
+MikroTik Integration
+</label>
+
+<label class="flex items-center gap-3">
+<input
+type="checkbox"
+id="featurePayment">
+Online Payments
+</label>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script type="module">
+
+/* FIREBASE */
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+getAuth,
+GoogleAuthProvider,
+signInWithPopup,
+onAuthStateChanged,
+signOut
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+getDatabase,
+ref,
+get,
+set,
+update
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+/* CONFIG */
+
+const firebaseConfig={
+
+apiKey:
+"AIzaSyBAzVYtCzLzdM9R-Lt1-8EiUpy9_dPrj6E",
+
+authDomain:
+"isp-billing-system-27cf8.firebaseapp.com",
+
+databaseURL:
+"https://isp-billing-system-27cf8-default-rtdb.firebaseio.com",
+
+projectId:
+"isp-billing-system-27cf8",
+
+storageBucket:
+"isp-billing-system-27cf8.firebasestorage.app",
+
+messagingSenderId:
+"643339508063",
+
+appId:
+"1:643339508063:web:232e6769f7128b6e323eea",
+
+measurementId:
+"G-J0QK9KKPC6"
+
+};
+
+
+const app=
+initializeApp(firebaseConfig);
+
+const auth=
+getAuth(app);
+
+const db=
+getDatabase(app);
+
+const provider=
+new GoogleAuthProvider();
+
+provider.setCustomParameters({
+prompt:"select_account"
+});
+
+
+/* SUPER ADMIN */
+
+const SUPER_ADMIN=
+"wazifkaroot@gmail.com";
+
+
+let dealers={};
+
+
+/* GOOGLE LOGIN */
+
+document
+.getElementById("googleLogin")
+.onclick=async()=>{
+
+const button=
+document.getElementById("googleLogin");
+
+const error=
+document.getElementById("loginError");
+
+error.innerText="";
+
+button.disabled=true;
+
+button.innerText=
+"Signing in...";
+
+
+try{
+
+await signInWithPopup(
+auth,
+provider
+);
+
+}catch(e){
+
+console.error(e);
+
+error.innerText=
+e.code+
+" : "+
+e.message;
+
+button.disabled=false;
+
+button.innerText=
+"Continue with Google";
+
+}
+
+};
+
+
+/* AUTH */
+
+onAuthStateChanged(
+auth,
+async user=>{
+
+if(!user){
+
+showLogin();
+
+return;
+
+}
+
+
+if(
+user.email.toLowerCase() !==
+SUPER_ADMIN.toLowerCase()
+){
+
+await signOut(auth);
+
+showLogin();
+
+document
+.getElementById("loginError")
+.innerText=
+"This account is not Super Admin.";
+
+return;
+
+}
+
+
+document
+.getElementById("loginPage")
+.classList
+.add("hidden");
+
+document
+.getElementById("adminPanel")
+.classList
+.remove("hidden");
+
+
+document
+.getElementById("adminEmail")
+.innerText=
+user.email;
+
+
+await loadDealers();
+
+});
+
+
+function showLogin(){
+
+document
+.getElementById("loginPage")
+.classList
+.remove("hidden");
+
+document
+.getElementById("adminPanel")
+.classList
+.add("hidden");
+
+}
+
+
+/* LOAD DEALERS */
+
+async function loadDealers(){
+
+const snapshot=
+await get(
+ref(db,"dealers")
+);
+
+
+dealers=
+snapshot.exists()
+?snapshot.val()
+:{};
+
+
+renderDealers();
+
+updateStats();
+
+}
+
+
+/* GENERATE LICENSE */
+
+function generateLicense(){
+
+const chars=
+"ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+let result="ISP-";
+
+for(let i=0;i<4;i++){
+
+result+=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
+];
+
+}
+
+result+="-";
+
+for(let i=0;i<4;i++){
+
+result+=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
+];
+
+}
+
+result+="-";
+
+for(let i=0;i<4;i++){
+
+result+=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
+];
+
+}
+
+return result;
+
+}
+
+
+/* CREATE DEALER */
+
+document
+.getElementById("createDealer")
+.onclick=async()=>{
+
+const name=
+document
+.getElementById("dealerName")
+.value.trim();
+
+const email=
+document
+.getElementById("dealerEmail")
+.value.trim()
+.toLowerCase();
+
+const phone=
+document
+.getElementById("dealerPhone")
+.value.trim();
+
+const company=
+document
+.getElementById("dealerCompany")
+.value.trim();
+
+const limit=
+Number(
+document
+.getElementById("dealerLimit")
+.value||100
+);
+
+const months=
+Number(
+document
+.getElementById("dealerMonths")
+.value
+);
+
+const status=
+document
+.getElementById("dealerStatus")
+.value;
+
+
+if(!name||!email){
+
+alert(
+"Dealer name and Gmail required."
+);
+
+return;
+
+}
+
+
+const id=
+"DEALER-"+Date.now();
+
+
+const licenseKey=
+generateLicense();
+
+
+const expiry=
+new Date();
+
+expiry.setMonth(
+expiry.getMonth()+months
+);
+
+
+const dealer={
+
+id,
+
+name,
+
+email,
+
+phone,
+
+company,
+
+role:"dealer",
+
+status,
+
+licenseKey,
+
+licenseExpiry:
+expiry.toISOString()
+.slice(0,10),
+
+customerLimit:
+limit,
+
+features:{
+
+whatsapp:true,
+
+reports:false,
+
+mikrotik:false,
+
+onlinePayment:false
+
+},
+
+createdAt:
+new Date().toISOString()
+
+};
+
+
+await set(
+
+ref(
+db,
+"dealers/"+id
+),
+
+dealer
+
+);
+
+
+document
+.getElementById("newLicense")
+.innerText=
+licenseKey;
+
+
+document
+.getElementById("licenseDealer")
+.innerText=
+"Dealer: "+name+
+" | Expiry: "+
+dealer.licenseExpiry;
+
+
+document
+.getElementById("licenseBox")
+.classList
+.remove("hidden");
+
+
+alert(
+"✅ Dealer created successfully!"
+);
+
+
+[
+"dealerName",
+"dealerEmail",
+"dealerPhone",
+"dealerCompany"
+]
+.forEach(id=>{
+
+document
+.getElementById(id)
+.value="";
+
+});
+
+
+await loadDealers();
+
+};
+
+
+/* COPY LICENSE */
+
+document
+.getElementById("copyLicense")
+.onclick=async()=>{
+
+const license=
+document
+.getElementById("newLicense")
+.innerText;
+
+await navigator
+.clipboard
+.writeText(license);
+
+alert(
+"✅ License copied!"
+);
+
+};
+
+
+/* RENDER DEALERS */
+
+function renderDealers(){
+
+const search=
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+
+let html="";
+
+
+Object
+.entries(dealers)
+.forEach(
+([id,d])=>{
+
+const text=
+(
+(d.name||"")+
+(d.email||"")+
+(d.company||"")+
+(d.licenseKey||"")
+)
+.toLowerCase();
+
+
+if(
+!text.includes(search)
+)return;
+
+
+html+=`
+
+<tr class="border-b">
+
+<td class="p-3">
+
+<b>
+${esc(d.name||"-")}
+</b>
+
+<br>
+
+<span class="text-gray-500">
+${esc(d.company||"")}
+</span>
+
+</td>
+
+
+<td class="p-3">
+${esc(d.email||"-")}
+</td>
+
+
+<td class="p-3">
+
+<code>
+${esc(d.licenseKey||"-")}
+</code>
+
+</td>
+
+
+<td class="p-3">
+${esc(d.licenseExpiry||"-")}
+</td>
+
+
+<td class="p-3">
+${Number(d.customerLimit||0)}
+</td>
+
+
+<td class="p-3">
+
+<span class="${
+d.status==="active"
+?"text-green-600"
+:"text-red-600"
+}">
+
+● ${esc(d.status||"unknown")}
+
+</span>
+
+</td>
+
+
+<td class="p-3">
+
+<div class="flex gap-2 flex-wrap">
+
+<button
+class="bg-yellow-500 text-white"
+onclick="toggleDealer('${id}')">
+
+${
+d.status==="active"
+?"Suspend"
+:"Activate"
+}
+
+</button>
+
+
+<button
+class="bg-blue-600 text-white"
+onclick="extendLicense('${id}')">
+
++30 Days
+
+</button>
+
+
+<button
+class="bg-red-600 text-white"
+onclick="deleteDealer('${id}')">
+
+Delete
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+document
+.getElementById("dealerTable")
+.innerHTML=
+html||
+`
+<tr>
+<td colspan="7"
+class="p-5 text-center">
+No dealers found.
+</td>
+</tr>
+`;
+
+}
+
+
+/* SEARCH */
+
+document
+.getElementById("search")
+.oninput=
+renderDealers;
+
+
+/* ACTIVATE / SUSPEND */
+
+window.toggleDealer=
+async function(id){
+
+const dealer=
+dealers[id];
+
+if(!dealer)return;
+
+
+const newStatus=
+dealer.status==="active"
+?"suspended"
+:"active";
+
+
+await update(
+
+ref(
+db,
+"dealers/"+id
+),
+
+{
+status:newStatus
+}
+
+);
+
+
+await loadDealers();
+
+};
+
+
+/* EXTEND LICENSE */
+
+window.extendLicense=
+async function(id){
+
+const dealer=
+dealers[id];
+
+if(!dealer)return;
+
+
+let date;
+
+if(
+dealer.licenseExpiry &&
+new Date(
+dealer.licenseExpiry
+)>new Date()
+){
+
+date=
+new Date(
+dealer.licenseExpiry
+);
+
+}else{
+
+date=
+new Date();
+
+}
+
+
+date.setDate(
+date.getDate()+30
+);
+
+
+await update(
+
+ref(
+db,
+"dealers/"+id
+),
+
+{
+
+licenseExpiry:
+date.toISOString()
+.slice(0,10),
+
+status:"active"
+
+}
+
+);
+
+
+alert(
+"✅ License extended by 30 days."
+);
+
+
+await loadDealers();
+
+};
+
+
+/* DELETE */
+
+window.deleteDealer=
+async function(id){
+
+const dealer=
+dealers[id];
+
+if(!dealer)return;
+
+
+const ok=
+confirm(
+"Delete dealer "+dealer.name+"?"
+);
+
+
+if(!ok)return;
+
+
+await set(
+ref(db,"dealers/"+id),
+null
+);
+
+
+await loadDealers();
+
+};
+
+
+/* STATS */
+
+function updateStats(){
+
+const list=
+Object.values(dealers);
+
+const today=
+new Date();
+
+document
+.getElementById("totalDealers")
+.innerText=
+list.length;
+
+
+document
+.getElementById("activeDealers")
+.innerText=
+list.filter(
+d=>d.status==="active"
+).length;
+
+
+document
+.getElementById("suspendedDealers")
+.innerText=
+list.filter(
+d=>d.status==="suspended"
+).length;
+
+
+document
+.getElementById("expiringDealers")
+.innerText=
+list.filter(d=>{
+
+if(!d.licenseExpiry)
+return false;
+
+const days=
+(
+new Date(d.licenseExpiry)
+-today
+)/86400000;
+
+return days>=0&&days<=30;
+
+}).length;
+
+}
+
+
+/* ESCAPE */
+
+function esc(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* LOGOUT */
+
+document
+.getElementById("logout")
+.onclick=async()=>{
+
+await signOut(auth);
+
+};
+
+</script>
+
+</body>
+</html>
