@@ -3,31 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISP Billing - Super Admin</title>
-
+<title>ISP Pro — Super Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+*{box-sizing:border-box}
 body{
-  background:#f1f5f9;
-  font-family:Arial,sans-serif;
+margin:0;
+background:#050816;
+color:#f8fafc;
+font-family:Arial,sans-serif
 }
-.card{
-  background:#fff;
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 5px 20px #0001;
+.glass{
+background:rgba(15,23,42,.82);
+border:1px solid rgba(255,255,255,.08);
+backdrop-filter:blur(18px)
+}
+.gradient{
+background:linear-gradient(135deg,#4f46e5,#7c3aed,#0891b2)
 }
 input,select{
-  width:100%;
-  padding:11px;
-  border:1px solid #d1d5db;
-  border-radius:10px;
+width:100%;
+background:#0b1220;
+color:#fff;
+border:1px solid #263246;
+padding:13px;
+border-radius:12px;
+outline:none
 }
-button{
-  border-radius:10px;
-  padding:10px 15px;
-  font-weight:bold;
+input:focus,select:focus{
+border-color:#6366f1
+}
+.card{
+background:rgba(15,23,42,.75);
+border:1px solid rgba(255,255,255,.06);
+border-radius:20px
 }
 </style>
 </head>
@@ -39,135 +49,115 @@ button{
 <div id="loginPage"
 class="min-h-screen flex items-center justify-center p-5">
 
-<div class="card w-full max-w-md text-center">
+<div class="glass rounded-3xl p-8 w-full max-w-md text-center">
 
-<div class="text-5xl mb-4">👑</div>
+<div class="w-20 h-20 gradient rounded-3xl mx-auto flex items-center justify-center text-4xl">
+👑
+</div>
 
-<h1 class="text-3xl font-bold">
-ISP Super Admin
+<h1 class="text-3xl font-black mt-5">
+ISP <span class="text-indigo-400">PRO</span>
 </h1>
 
-<p class="text-gray-500 mt-2 mb-6">
-Dealer & License Management
+<p class="text-slate-400 mt-2">
+Super Admin Control Center
 </p>
 
 <button
 id="googleLogin"
-class="w-full bg-black text-white">
-
-Continue with Google
-
+class="w-full bg-white text-black font-bold py-4 rounded-xl mt-7">
+🇬🇧 Continue with Google
 </button>
 
-<p
-id="loginError"
-class="text-red-500 text-sm mt-4">
+<p id="loginError"
+class="text-red-400 text-xs mt-4">
 </p>
 
 </div>
 </div>
 
 
-<!-- ADMIN -->
+<!-- ADMIN PANEL -->
 
-<div id="adminPanel"
-class="hidden">
+<div id="adminPanel" class="hidden">
 
-<header class="bg-white border-b p-4">
+<header class="sticky top-0 z-20 bg-[#060913]/90 backdrop-blur-xl border-b border-white/5">
 
-<div class="max-w-7xl mx-auto
-flex justify-between items-center">
+<div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
+
+<div class="flex items-center gap-3">
+
+<div class="w-11 h-11 gradient rounded-xl flex items-center justify-center">
+👑
+</div>
 
 <div>
-
-<h1 class="text-xl font-bold">
-👑 ISP Super Admin
+<h1 class="font-black">
+ISP PRO SUPER ADMIN
 </h1>
 
-<p
-id="adminEmail"
-class="text-sm text-gray-500">
+<p id="adminEmail"
+class="text-[10px] text-slate-500">
 </p>
+</div>
 
 </div>
 
 <button
 id="logout"
-class="bg-red-500 text-white">
-
+class="bg-red-500/10 text-red-400 px-5 py-3 rounded-xl">
 Logout
-
 </button>
 
 </div>
-
 </header>
 
 
-<main class="max-w-7xl mx-auto p-4">
+<main class="max-w-7xl mx-auto p-4 lg:p-6">
 
 
 <!-- STATS -->
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-<div class="card">
-
-<p class="text-gray-500">
-Total Dealers
+<div class="card p-5">
+<p class="text-xs text-slate-500">
+TOTAL DEALERS
 </p>
-
-<h2
-id="totalDealers"
-class="text-3xl font-bold">
+<h2 id="totalDealers"
+class="text-3xl font-black mt-2">
 0
 </h2>
-
 </div>
 
-
-<div class="card">
-
-<p class="text-gray-500">
-Active
+<div class="card p-5">
+<p class="text-xs text-slate-500">
+ACTIVE
 </p>
-
-<h2
-id="activeDealers"
-class="text-3xl font-bold text-green-600">
+<h2 id="activeDealers"
+class="text-3xl font-black text-green-400 mt-2">
 0
 </h2>
-
 </div>
 
-
-<div class="card">
-
-<p class="text-gray-500">
-Suspended
+<div class="card p-5">
+<p class="text-xs text-slate-500">
+SUSPENDED
 </p>
-
-<h2
-id="suspendedDealers"
-class="text-3xl font-bold text-red-600">
+<h2 id="suspendedDealers"
+class="text-3xl font-black text-red-400 mt-2">
 0
 </h2>
-
 </div>
 
-
-<div class="card">
-
-<p class="text-gray-500">
-Expiring
+<div class="card p-5">
+<p class="text-xs text-slate-500">
+EXPIRING
 </p>
-
-<h2
-id="expiringDealers"
-class="text-3xl font-bold text-orange-500">
+<h2 id="expiringDealers"
+class="text-3xl font-black text-yellow-400 mt-2">
 0
 </h2>
-
 </div>
 
 </div>
@@ -175,13 +165,28 @@ class="text-3xl font-bold text-orange-500">
 
 <!-- CREATE DEALER -->
 
-<div class="card mb-5">
+<div class="card p-6 mt-5">
 
-<h2 class="text-xl font-bold mb-4">
+<div class="flex justify-between items-center gap-3 flex-wrap">
+
+<div>
+<h2 class="text-2xl font-black">
 ➕ Create Dealer
 </h2>
 
-<div class="grid md:grid-cols-3 gap-3">
+<p class="text-sm text-slate-500">
+Generate a license compatible with Dealer Panel
+</p>
+</div>
+
+<div class="text-xs text-green-400">
+● Firebase Connected
+</div>
+
+</div>
+
+
+<div class="grid md:grid-cols-3 gap-3 mt-6">
 
 <input
 id="dealerName"
@@ -208,26 +213,11 @@ placeholder="Customer Limit">
 
 <select id="dealerMonths">
 
-<option value="1">
-1 Month
-</option>
-
-<option value="3">
-3 Months
-</option>
-
-<option value="6">
-6 Months
-</option>
-
-<option value="12"
-selected>
-12 Months
-</option>
-
-<option value="24">
-24 Months
-</option>
+<option value="1">1 Month</option>
+<option value="3">3 Months</option>
+<option value="6">6 Months</option>
+<option value="12" selected>12 Months</option>
+<option value="24">24 Months</option>
 
 </select>
 
@@ -248,105 +238,124 @@ Suspended
 
 <button
 id="createDealer"
-class="bg-blue-600 text-white mt-4">
-
-Create Dealer + Generate License
-
+class="gradient text-white px-7 py-4 rounded-xl font-bold mt-5">
+🔑 Create Dealer + Generate License
 </button>
 
+<p id="createStatus"
+class="text-sm mt-4">
+</p>
+
 </div>
 
 
-<!-- GENERATED LICENSE -->
+<!-- NEW LICENSE -->
 
-<div
-id="licenseBox"
-class="hidden card mb-5">
+<div id="licenseBox"
+class="hidden card p-6 mt-5">
 
-<h2 class="text-xl font-bold">
-🔑 New License Created
+<div class="flex justify-between items-center gap-3">
+
+<div>
+<h2 class="text-xl font-black">
+🔑 License Created
 </h2>
 
-<div
-id="newLicense"
-class="text-2xl font-bold
-bg-gray-100 p-4 rounded-xl mt-3">
+<p class="text-xs text-slate-500">
+Give this key to the dealer.
+</p>
 </div>
 
-<p
-id="licenseDealer"
-class="mt-3">
+<div class="text-green-400 text-sm">
+✓ READY
+</div>
+
+</div>
+
+
+<div id="newLicense"
+class="bg-black/40 border border-indigo-500/30 rounded-2xl p-5 text-center text-2xl font-black tracking-widest mt-5">
+</div>
+
+<p id="licenseDealer"
+class="text-sm text-slate-400 mt-4 text-center">
 </p>
+
+<div class="flex gap-3 mt-5">
 
 <button
 id="copyLicense"
-class="bg-green-600 text-white mt-3">
+class="flex-1 bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold">
+📋 Copy License
+</button>
 
-Copy License Key
-
+<button
+id="closeLicense"
+class="bg-slate-800 px-5 py-3 rounded-xl">
+Close
 </button>
 
 </div>
 
+</div>
 
-<!-- DEALERS -->
 
-<div class="card">
+<!-- SEARCH -->
 
-<div
-class="flex justify-between
-items-center mb-4">
+<div class="card p-5 mt-5">
 
-<h2 class="text-xl font-bold">
-👥 All Dealers
+<div class="flex justify-between gap-4 items-center flex-wrap">
+
+<div>
+<h2 class="text-xl font-black">
+👥 Dealer Management
 </h2>
+
+<p class="text-xs text-slate-500 mt-1">
+All dealer licenses
+</p>
+</div>
 
 <input
 id="search"
-class="max-w-xs"
-placeholder="Search Dealer">
+class="max-w-sm"
+placeholder="Search dealer, Gmail or license...">
 
 </div>
 
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto mt-5">
 
 <table class="w-full text-sm">
 
 <thead>
+<tr class="border-b border-white/10">
 
-<tr class="border-b">
-
-<th class="p-3 text-left">
+<th class="p-4 text-left">
 Dealer
 </th>
 
-<th class="p-3 text-left">
-Email
+<th class="p-4 text-left">
+Gmail
 </th>
 
-<th class="p-3 text-left">
+<th class="p-4 text-left">
 License
 </th>
 
-<th class="p-3 text-left">
+<th class="p-4 text-left">
 Expiry
 </th>
 
-<th class="p-3 text-left">
-Limit
-</th>
-
-<th class="p-3 text-left">
+<th class="p-4 text-left">
 Status
 </th>
 
-<th class="p-3">
+<th class="p-4 text-left">
 Actions
 </th>
 
 </tr>
-
 </thead>
 
 <tbody id="dealerTable">
@@ -358,64 +367,17 @@ Actions
 
 </div>
 
-
-<!-- FUTURE FEATURES -->
-
-<div class="card mt-5">
-
-<h2 class="text-xl font-bold mb-4">
-⚙️ Future Features
-</h2>
-
-<div class="grid md:grid-cols-2 gap-3">
-
-<label class="flex items-center gap-3">
-<input
-type="checkbox"
-id="featureWhatsApp">
-WhatsApp Notifications
-</label>
-
-<label class="flex items-center gap-3">
-<input
-type="checkbox"
-id="featureReports">
-Advanced Reports
-</label>
-
-<label class="flex items-center gap-3">
-<input
-type="checkbox"
-id="featureMikrotik">
-MikroTik Integration
-</label>
-
-<label class="flex items-center gap-3">
-<input
-type="checkbox"
-id="featurePayment">
-Online Payments
-</label>
-
-</div>
-
-</div>
-
 </main>
-
 </div>
 
 
 <script type="module">
-
-/* FIREBASE */
 
 import {
 initializeApp
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 
 import {
 getAuth,
@@ -426,7 +388,6 @@ signOut
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 import {
 getDatabase,
@@ -439,7 +400,7 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-/* CONFIG */
+/* FIREBASE */
 
 const firebaseConfig={
 
@@ -469,52 +430,42 @@ measurementId:
 
 };
 
+const app=initializeApp(firebaseConfig);
 
-const app=
-initializeApp(firebaseConfig);
+const auth=getAuth(app);
 
-const auth=
-getAuth(app);
+const db=getDatabase(app);
 
-const db=
-getDatabase(app);
-
-const provider=
-new GoogleAuthProvider();
+const provider=new GoogleAuthProvider();
 
 provider.setCustomParameters({
 prompt:"select_account"
 });
 
 
-/* SUPER ADMIN */
+/* ONLY SUPER ADMIN */
 
 const SUPER_ADMIN=
 "wazifkaroot@gmail.com";
 
-
 let dealers={};
 
 
-/* GOOGLE LOGIN */
+/* LOGIN */
 
 document
 .getElementById("googleLogin")
 .onclick=async()=>{
 
-const button=
+const btn=
 document.getElementById("googleLogin");
 
 const error=
 document.getElementById("loginError");
 
+btn.disabled=true;
+btn.innerText="Connecting...";
 error.innerText="";
-
-button.disabled=true;
-
-button.innerText=
-"Signing in...";
-
 
 try{
 
@@ -528,14 +479,11 @@ provider
 console.error(e);
 
 error.innerText=
-e.code+
-" : "+
-e.message;
+e.code+" : "+e.message;
 
-button.disabled=false;
-
-button.innerText=
-"Continue with Google";
+btn.disabled=false;
+btn.innerText=
+"🇬🇧 Continue with Google";
 
 }
 
@@ -551,14 +499,12 @@ async user=>{
 if(!user){
 
 showLogin();
-
 return;
 
 }
 
-
 if(
-user.email.toLowerCase() !==
+(user.email||"").toLowerCase() !==
 SUPER_ADMIN.toLowerCase()
 ){
 
@@ -566,32 +512,25 @@ await signOut(auth);
 
 showLogin();
 
-document
-.getElementById("loginError")
-.innerText=
-"This account is not Super Admin.";
+document.getElementById("loginError").innerText=
+"This Google account is not Super Admin.";
 
 return;
 
 }
 
-
 document
 .getElementById("loginPage")
-.classList
-.add("hidden");
+.classList.add("hidden");
 
 document
 .getElementById("adminPanel")
-.classList
-.remove("hidden");
-
+.classList.remove("hidden");
 
 document
 .getElementById("adminEmail")
 .innerText=
 user.email;
-
 
 await loadDealers();
 
@@ -602,53 +541,59 @@ function showLogin(){
 
 document
 .getElementById("loginPage")
-.classList
-.remove("hidden");
+.classList.remove("hidden");
 
 document
 .getElementById("adminPanel")
-.classList
-.add("hidden");
+.classList.add("hidden");
 
 }
 
 
-/* LOAD DEALERS */
+/* LOAD */
 
 async function loadDealers(){
 
-const snapshot=
-await get(
-ref(db,"dealers")
-);
+try{
 
+const snap=
+await get(ref(db,"dealers"));
 
 dealers=
-snapshot.exists()
-?snapshot.val()
+snap.exists()
+?snap.val()
 :{};
 
-
 renderDealers();
-
 updateStats();
+
+}catch(e){
+
+console.error(e);
+
+alert(
+"Firebase error: "+e.message
+);
+
+}
 
 }
 
 
-/* GENERATE LICENSE */
+/* LICENSE GENERATOR */
 
 function generateLicense(){
 
 const chars=
 "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-let result="ISP-";
+let key="ISP-";
+
+for(let group=0;group<3;group++){
 
 for(let i=0;i<4;i++){
 
-result+=
-chars[
+key+=chars[
 Math.floor(
 Math.random()*chars.length
 )
@@ -656,33 +601,12 @@ Math.random()*chars.length
 
 }
 
-result+="-";
-
-for(let i=0;i<4;i++){
-
-result+=
-chars[
-Math.floor(
-Math.random()*chars.length
-)
-];
+if(group<2)
+key+="-";
 
 }
 
-result+="-";
-
-for(let i=0;i<4;i++){
-
-result+=
-chars[
-Math.floor(
-Math.random()*chars.length
-)
-];
-
-}
-
-return result;
+return key;
 
 }
 
@@ -693,65 +617,94 @@ document
 .getElementById("createDealer")
 .onclick=async()=>{
 
+const btn=
+document.getElementById("createDealer");
+
+const status=
+document.getElementById("createStatus");
+
 const name=
-document
-.getElementById("dealerName")
+document.getElementById("dealerName")
 .value.trim();
 
 const email=
-document
-.getElementById("dealerEmail")
+document.getElementById("dealerEmail")
 .value.trim()
 .toLowerCase();
 
 const phone=
-document
-.getElementById("dealerPhone")
+document.getElementById("dealerPhone")
 .value.trim();
 
 const company=
-document
-.getElementById("dealerCompany")
+document.getElementById("dealerCompany")
 .value.trim();
 
 const limit=
 Number(
-document
-.getElementById("dealerLimit")
+document.getElementById("dealerLimit")
 .value||100
 );
 
 const months=
 Number(
-document
-.getElementById("dealerMonths")
+document.getElementById("dealerMonths")
 .value
 );
 
-const status=
-document
-.getElementById("dealerStatus")
+const dealerStatus=
+document.getElementById("dealerStatus")
 .value;
 
 
 if(!name||!email){
 
-alert(
-"Dealer name and Gmail required."
-);
+status.className=
+"text-sm text-red-400 mt-4";
+
+status.innerText=
+"Dealer Name and Gmail are required.";
 
 return;
 
 }
 
 
-const id=
+btn.disabled=true;
+btn.innerText=
+"Creating...";
+
+
+try{
+
+
+/* UNIQUE DEALER ID */
+
+const dealerId=
 "DEALER-"+Date.now();
 
 
-const licenseKey=
+/* UNIQUE LICENSE */
+
+let licenseKey;
+
+do{
+
+licenseKey=
 generateLicense();
 
+const check=
+await get(
+ref(db,"licenses/"+licenseKey)
+);
+
+if(!check.exists())
+break;
+
+}while(true);
+
+
+/* EXPIRY */
 
 const expiry=
 new Date();
@@ -760,31 +713,40 @@ expiry.setMonth(
 expiry.getMonth()+months
 );
 
+const expiryDate=
+expiry.toISOString().slice(0,10);
 
-const dealer={
 
-id,
+/*
+MAIN DEALER RECORD
+Compatible with Dealer Panel
+*/
 
-name,
+const dealerData={
 
-email,
+id:dealerId,
 
-phone,
+name:name,
 
-company,
+email:email,
+
+phone:phone,
+
+company:company,
 
 role:"dealer",
 
-status,
+status:dealerStatus,
 
-licenseKey,
+licenseKey:licenseKey,
 
-licenseExpiry:
-expiry.toISOString()
-.slice(0,10),
+licenseExpiry:expiryDate,
 
-customerLimit:
-limit,
+customerLimit:limit,
+
+licenseVerified:false,
+
+uid:"",
 
 features:{
 
@@ -804,86 +766,157 @@ new Date().toISOString()
 };
 
 
+/*
+1. SAVE DEALER
+*/
+
 await set(
-
-ref(
-db,
-"dealers/"+id
-),
-
-dealer
-
+ref(db,"dealers/"+dealerId),
+dealerData
 );
 
+
+/*
+2. SAVE LICENSE INDEX
+THIS IS WHAT DEALER
+VERIFICATION USES.
+*/
+
+const licenseData={
+
+licenseKey:licenseKey,
+
+dealerId:dealerId,
+
+dealerEmail:email,
+
+status:dealerStatus,
+
+licenseExpiry:expiryDate,
+
+customerLimit:limit,
+
+createdAt:
+new Date().toISOString()
+
+};
+
+await set(
+ref(db,"licenses/"+licenseKey),
+licenseData
+);
+
+
+/* SHOW */
 
 document
 .getElementById("newLicense")
 .innerText=
 licenseKey;
 
-
 document
 .getElementById("licenseDealer")
 .innerText=
-"Dealer: "+name+
-" | Expiry: "+
-dealer.licenseExpiry;
-
+name+
+" • "+
+email+
+" • Expiry: "+
+expiryDate;
 
 document
 .getElementById("licenseBox")
-.classList
-.remove("hidden");
+.classList.remove("hidden");
+
+status.className=
+"text-sm text-green-400 mt-4";
+
+status.innerText=
+"✅ Dealer + License created successfully.";
 
 
-alert(
-"✅ Dealer created successfully!"
-);
-
+/* CLEAR */
 
 [
 "dealerName",
 "dealerEmail",
 "dealerPhone",
 "dealerCompany"
-]
-.forEach(id=>{
-
-document
-.getElementById(id)
-.value="";
-
+].forEach(id=>{
+document.getElementById(id).value="";
 });
 
 
 await loadDealers();
 
+
+}catch(e){
+
+console.error(e);
+
+status.className=
+"text-sm text-red-400 mt-4";
+
+status.innerText=
+"❌ "+e.message;
+
+}finally{
+
+btn.disabled=false;
+
+btn.innerText=
+"🔑 Create Dealer + Generate License";
+
+}
+
 };
 
 
-/* COPY LICENSE */
+/* COPY */
 
 document
 .getElementById("copyLicense")
 .onclick=async()=>{
 
-const license=
+const key=
 document
 .getElementById("newLicense")
 .innerText;
 
-await navigator
-.clipboard
-.writeText(license);
+try{
+
+await navigator.clipboard.writeText(key);
+
+alert("✅ License copied.");
+
+}catch{
 
 alert(
-"✅ License copied!"
+"Copy failed. Long press and copy the license."
 );
+
+}
 
 };
 
 
-/* RENDER DEALERS */
+document
+.getElementById("closeLicense")
+.onclick=()=>{
+document
+.getElementById("licenseBox")
+.classList.add("hidden");
+};
+
+
+/* SEARCH */
+
+document
+.getElementById("search")
+.oninput=
+renderDealers;
+
+
+/* RENDER */
 
 function renderDealers(){
 
@@ -893,116 +926,102 @@ document
 .value
 .toLowerCase();
 
-
 let html="";
 
 
 Object
 .entries(dealers)
-.forEach(
-([id,d])=>{
+.forEach(([id,d])=>{
 
 const text=
 (
-(d.name||"")+
-(d.email||"")+
-(d.company||"")+
-(d.licenseKey||"")
-)
-.toLowerCase();
-
+d.name||""
+)+" "+
+(
+d.email||""
+)+" "+
+(
+d.company||""
+)+" "+
+(
+d.licenseKey||""
+);
 
 if(
-!text.includes(search)
+!text.toLowerCase().includes(search)
 )return;
+
+
+const active=
+d.status==="active";
 
 
 html+=`
 
-<tr class="border-b">
+<tr class="border-b border-white/5">
 
-<td class="p-3">
+<td class="p-4">
 
-<b>
-${esc(d.name||"-")}
-</b>
+<b>${esc(d.name||"-")}</b>
 
-<br>
-
-<span class="text-gray-500">
+<div class="text-[10px] text-slate-500">
 ${esc(d.company||"")}
-</span>
+</div>
 
 </td>
 
-
-<td class="p-3">
+<td class="p-4">
 ${esc(d.email||"-")}
 </td>
 
+<td class="p-4">
 
-<td class="p-3">
-
-<code>
+<div class="font-mono text-xs text-indigo-300">
 ${esc(d.licenseKey||"-")}
-</code>
+</div>
 
 </td>
 
-
-<td class="p-3">
+<td class="p-4">
 ${esc(d.licenseExpiry||"-")}
 </td>
 
-
-<td class="p-3">
-${Number(d.customerLimit||0)}
-</td>
-
-
-<td class="p-3">
+<td class="p-4">
 
 <span class="${
-d.status==="active"
-?"text-green-600"
-:"text-red-600"
+active
+?"text-green-400"
+:"text-red-400"
 }">
 
-● ${esc(d.status||"unknown")}
+● ${active?"ACTIVE":"SUSPENDED"}
 
 </span>
 
 </td>
 
-
-<td class="p-3">
+<td class="p-4">
 
 <div class="flex gap-2 flex-wrap">
 
 <button
-class="bg-yellow-500 text-white"
+class="bg-yellow-500 text-black px-3 py-2 rounded-lg"
 onclick="toggleDealer('${id}')">
 
-${
-d.status==="active"
-?"Suspend"
-:"Activate"
-}
+${active?"Suspend":"Activate"}
 
 </button>
 
-
 <button
-class="bg-blue-600 text-white"
+class="bg-blue-600 px-3 py-2 rounded-lg"
 onclick="extendLicense('${id}')">
 
 +30 Days
 
 </button>
 
-
 <button
-class="bg-red-600 text-white"
+class="bg-red-600 px-3 py-2 rounded-lg"
 onclick="deleteDealer('${id}')">
 
 Delete
@@ -1026,8 +1045,8 @@ document
 html||
 `
 <tr>
-<td colspan="7"
-class="p-5 text-center">
+<td colspan="6"
+class="p-8 text-center text-slate-500">
 No dealers found.
 </td>
 </tr>
@@ -1036,112 +1055,105 @@ No dealers found.
 }
 
 
-/* SEARCH */
-
-document
-.getElementById("search")
-.oninput=
-renderDealers;
-
-
-/* ACTIVATE / SUSPEND */
+/* TOGGLE */
 
 window.toggleDealer=
 async function(id){
 
-const dealer=
-dealers[id];
+const d=dealers[id];
 
-if(!dealer)return;
-
+if(!d)return;
 
 const newStatus=
-dealer.status==="active"
+d.status==="active"
 ?"suspended"
 :"active";
 
 
 await update(
-
-ref(
-db,
-"dealers/"+id
-),
-
+ref(db,"dealers/"+id),
 {
 status:newStatus
 }
-
 );
 
+
+/*
+Keep license index synchronized
+*/
+
+if(d.licenseKey){
+
+await update(
+ref(db,"licenses/"+d.licenseKey),
+{
+status:newStatus
+}
+);
+
+}
 
 await loadDealers();
 
 };
 
 
-/* EXTEND LICENSE */
+/* EXTEND */
 
 window.extendLicense=
 async function(id){
 
-const dealer=
-dealers[id];
+const d=dealers[id];
 
-if(!dealer)return;
-
+if(!d)return;
 
 let date;
 
 if(
-dealer.licenseExpiry &&
-new Date(
-dealer.licenseExpiry
-)>new Date()
+d.licenseExpiry &&
+new Date(d.licenseExpiry)>new Date()
 ){
 
-date=
-new Date(
-dealer.licenseExpiry
-);
+date=new Date(d.licenseExpiry);
 
 }else{
 
-date=
-new Date();
+date=new Date();
 
 }
-
 
 date.setDate(
 date.getDate()+30
 );
 
+const expiry=
+date.toISOString().slice(0,10);
+
 
 await update(
-
-ref(
-db,
-"dealers/"+id
-),
-
+ref(db,"dealers/"+id),
 {
-
-licenseExpiry:
-date.toISOString()
-.slice(0,10),
-
+licenseExpiry:expiry,
 status:"active"
-
 }
-
 );
 
+
+if(d.licenseKey){
+
+await update(
+ref(db,"licenses/"+d.licenseKey),
+{
+licenseExpiry:expiry,
+status:"active"
+}
+);
+
+}
 
 alert(
 "✅ License extended by 30 days."
 );
-
 
 await loadDealers();
 
@@ -1153,19 +1165,15 @@ await loadDealers();
 window.deleteDealer=
 async function(id){
 
-const dealer=
-dealers[id];
+const d=dealers[id];
 
-if(!dealer)return;
+if(!d)return;
 
-
-const ok=
-confirm(
-"Delete dealer "+dealer.name+"?"
-);
-
-
-if(!ok)return;
+if(
+!confirm(
+"Delete "+d.name+" and its license?"
+)
+)return;
 
 
 await set(
@@ -1173,6 +1181,15 @@ ref(db,"dealers/"+id),
 null
 );
 
+
+if(d.licenseKey){
+
+await set(
+ref(db,"licenses/"+d.licenseKey),
+null
+);
+
+}
 
 await loadDealers();
 
@@ -1186,33 +1203,24 @@ function updateStats(){
 const list=
 Object.values(dealers);
 
-const today=
-new Date();
+const now=new Date();
 
-document
-.getElementById("totalDealers")
-.innerText=
-list.length;
+document.getElementById("totalDealers")
+.innerText=list.length;
 
-
-document
-.getElementById("activeDealers")
+document.getElementById("activeDealers")
 .innerText=
 list.filter(
 d=>d.status==="active"
 ).length;
 
-
-document
-.getElementById("suspendedDealers")
+document.getElementById("suspendedDealers")
 .innerText=
 list.filter(
 d=>d.status==="suspended"
 ).length;
 
-
-document
-.getElementById("expiringDealers")
+document.getElementById("expiringDealers")
 .innerText=
 list.filter(d=>{
 
@@ -1221,8 +1229,7 @@ return false;
 
 const days=
 (
-new Date(d.licenseExpiry)
--today
+new Date(d.licenseExpiry)-now
 )/86400000;
 
 return days>=0&&days<=30;
@@ -1234,9 +1241,9 @@ return days>=0&&days<=30;
 
 /* ESCAPE */
 
-function esc(value){
+function esc(v){
 
-return String(value)
+return String(v??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
@@ -1250,11 +1257,8 @@ return String(value)
 
 document
 .getElementById("logout")
-.onclick=async()=>{
-
-await signOut(auth);
-
-};
+.onclick=
+()=>signOut(auth);
 
 </script>
 
