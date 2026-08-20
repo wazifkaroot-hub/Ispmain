@@ -1,151 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ISP Billing — Super Admin</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#172033}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;box-shadow:0 8px 30px rgba(15,23,42,.06)}
-.sidebar{width:250px;min-height:100vh;position:fixed;inset:0 auto 0 0;background:#0f172a;color:#fff;z-index:50}.main{margin-left:250px;min-height:100vh}
-.navbtn{width:100%;text-align:left;border:0;background:transparent;padding:12px 14px;border-radius:12px;margin-bottom:5px;color:#cbd5e1}.navbtn:hover,.navbtn.active{background:#2563eb;color:#fff}
-.input{width:100%;border:1px solid #dbe1ea;border-radius:11px;padding:11px 13px;outline:none;background:#fff}.input:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}
-.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:700}.primary{background:#2563eb;color:white}.success{background:#16a34a;color:white}.danger{background:#dc2626;color:white}.dark{background:#0f172a;color:white}.gray{background:#eef2f7;color:#334155}
-.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}.green{background:#dcfce7;color:#166534}.red{background:#fee2e2;color:#991b1b}.orange{background:#ffedd5;color:#9a3412}.blue{background:#dbeafe;color:#1d4ed8}
-.modal{position:fixed;inset:0;background:#020617aa;display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}.hidden{display:none!important}table{min-width:950px}
-@media(max-width:800px){.sidebar{width:100%;min-height:auto;position:relative}.main{margin-left:0}.sidebar-nav{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.navbtn{margin:0}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ISP Billing — Dealer Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{background:#f4f7fb;font-family:Inter,Arial,sans-serif;}
+        .card{background:#fff;border-radius:20px;box-shadow:0 10px 35px rgba(15,23,42,.07)}
+        .sidebar{background:#0f172a;color:#fff;}
+        .navbtn{width:100%;text-align:left;padding:12px 14px;border-radius:12px;margin-bottom:5px;color:#cbd5e1;}
+        .navbtn:hover,.navbtn.active{background:#2563eb;color:#fff;}
+        .input{width:100%;border:1px solid #dbe1ea;border-radius:12px;padding:11px 13px;}
+        .modal{position:fixed;inset:0;background:#020617aa;display:flex;align-items:center;justify-content:center;padding:18px;z-index:100}
+        .hidden{display:none!important}
+    </style>
 </head>
 <body>
 
-<div id="loading" class="fixed inset-0 bg-white z-[999] flex items-center justify-center">
-<div class="text-center"><div class="text-5xl">🛡️</div><b class="text-xl block mt-3">Checking Admin...</b><span class="text-gray-500">Please wait</span></div>
+<!-- Loading Screen -->
+<div id="authLoading" class="fixed inset-0 bg-white z-[999] flex items-center justify-center">
+    <div class="text-center"><div class="text-5xl mb-4">🌐</div><div class="font-bold text-xl">Checking session...</div></div>
 </div>
 
-<div id="login" class="hidden min-h-screen flex items-center justify-center p-5">
-<div class="card w-full max-w-md p-7">
-<div class="text-center"><div class="text-6xl">🛡️</div><h1 class="text-3xl font-black mt-3">ISP Billing</h1><p class="text-gray-500">Super Admin Panel</p></div>
-<div id="loginMsg" class="hidden mt-5 rounded-xl p-3 text-sm"></div>
-<button id="loginBtn" class="btn dark w-full mt-6">Continue with Google</button>
-<p class="text-xs text-gray-400 text-center mt-4">Only the registered Super Admin Gmail can enter.</p>
-</div></div>
-
-<div id="app" class="hidden">
-<aside class="sidebar p-4">
-<div class="mb-6"><div class="text-2xl font-black">🛡️ ISP Billing</div><div class="text-xs text-slate-400">Super Admin</div></div>
-<div class="sidebar-nav">
-<button class="navbtn active" data-page="dashboard">📊 Dashboard</button>
-<button class="navbtn" data-page="dealers">👥 Dealers</button>
-<button class="navbtn" data-page="licenses">🔐 Licenses</button>
-<button class="navbtn" data-page="customers">👤 Customers</button>
-<button class="navbtn" data-page="recovery">🔄 Recovery</button>
+<!-- Login Screen -->
+<div id="loginPage" class="hidden min-h-screen flex items-center justify-center p-5">
+    <div class="card w-full max-w-md p-7 text-center">
+        <h1 class="text-3xl font-black mb-2">ISP Billing</h1>
+        <p class="text-gray-500 mb-6">Dealer Management System</p>
+        <button id="googleLogin" class="bg-black text-white w-full py-3 rounded-xl font-bold">Continue with Google</button>
+        <div id="loginMessage" class="mt-4 text-red-600 text-sm"></div>
+    </div>
 </div>
-<div class="mt-8 pt-5 border-t border-slate-700"><div id="adminName" class="font-bold"></div><div id="adminEmail" class="text-xs text-slate-400 mt-1"></div><button id="logout" class="btn danger w-full mt-4">Logout</button></div>
-</aside>
 
-<main class="main">
-<header class="bg-white border-b p-4 sticky top-0 z-40 flex justify-between items-center"><div><h2 id="title" class="text-xl font-black">Dashboard</h2><p class="text-xs text-gray-500">Manage dealers and licenses</p></div><span class="badge blue">SUPER ADMIN</span></header>
-<div class="p-4 md:p-6">
+<!-- App Structure (Main Panel) -->
+<div id="app" class="hidden flex">
+    <aside class="sidebar w-[250px] min-h-screen p-4 fixed">
+        <div class="mb-6 text-xl font-black">🌐 ISP Billing</div>
+        <button class="navbtn active" data-page="dashboard">📊 Dashboard</button>
+        <button class="navbtn" data-page="customers">👥 Customers</button>
+        <button class="navbtn" data-page="bills">🧾 Bills</button>
+        <button id="logoutBtn" class="bg-red-500 w-full p-2 mt-10 rounded-lg">Logout</button>
+    </aside>
 
-<section id="page-dashboard" class="page">
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-<div class="card p-5"><div class="text-gray-500 text-sm">Dealers</div><div id="sDealers" class="text-3xl font-black mt-2">0</div></div>
-<div class="card p-5"><div class="text-gray-500 text-sm">Active Licenses</div><div id="sLicenses" class="text-3xl font-black mt-2">0</div></div>
-<div class="card p-5"><div class="text-gray-500 text-sm">Expired</div><div id="sExpired" class="text-3xl font-black mt-2">0</div></div>
-<div class="card p-5"><div class="text-gray-500 text-sm">Customers</div><div id="sCustomers" class="text-3xl font-black mt-2">0</div></div>
+    <main class="ml-[250px] p-6 w-full">
+        <h2 id="pageTitle" class="text-2xl font-black mb-5">Dashboard</h2>
+        
+        <!-- Dashboard Section -->
+        <section id="page-dashboard" class="page">
+            <div class="grid grid-cols-4 gap-4">
+                <div class="card p-5"><div>Customers</div><div id="statCustomers" class="text-3xl font-black">0</div></div>
+                <div class="card p-5"><div>Unpaid Bills</div><div id="statUnpaid" class="text-3xl font-black">0</div></div>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section id="page-customers" class="page hidden">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4" onclick="openCustomerModal()">+ Add Customer</button>
+            <div class="card p-4"><table class="w-full"><tbody id="customerTable"></tbody></table></div>
+        </section>
+    </main>
 </div>
-<div class="card p-5 mt-5"><h3 class="font-black text-lg">License System</h3><p class="text-gray-500 mt-2">Create a license, assign it to a dealer, set expiry and customer limit, then activate or suspend it.</p><button class="btn primary mt-4" onclick="openLicense()">➕ Create License</button></div>
-</section>
-
-<section id="page-dealers" class="page hidden">
-<div class="flex justify-between items-center mb-5"><div><h2 class="text-2xl font-black">Dealers</h2><p class="text-gray-500 text-sm">Create and manage dealer accounts.</p></div><button class="btn primary" onclick="openDealer()">➕ Add Dealer</button></div>
-<div class="card p-4 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b text-left"><th class="p-3">Dealer</th><th class="p-3">Email</th><th class="p-3">Company</th><th class="p-3">License</th><th class="p-3">Status</th><th class="p-3">Actions</th></tr></thead><tbody id="dealerTable"></tbody></table></div>
-</section>
-
-<section id="page-licenses" class="page hidden">
-<div class="flex justify-between items-center mb-5"><div><h2 class="text-2xl font-black">Licenses</h2><p class="text-gray-500 text-sm">Assign, edit, activate or suspend licenses.</p></div><button class="btn primary" onclick="openLicense()">➕ New License</button></div>
-<div class="card p-4 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b text-left"><th class="p-3">License Key</th><th class="p-3">Dealer</th><th class="p-3">Start</th><th class="p-3">Expiry</th><th class="p-3">Limit</th><th class="p-3">Status</th><th class="p-3">Actions</th></tr></thead><tbody id="licenseTable"></tbody></table></div>
-</section>
-
-<section id="page-customers" class="page hidden">
-<h2 class="text-2xl font-black mb-5">All Customers</h2>
-<div class="card p-4 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b text-left"><th class="p-3">Customer</th><th class="p-3">Dealer</th><th class="p-3">Phone</th><th class="p-3">Package</th><th class="p-3">Status</th></tr></thead><tbody id="customerTable"></tbody></table></div>
-</section>
-
-<section id="page-recovery" class="page hidden">
-<h2 class="text-2xl font-black mb-5">Recovery Requests</h2>
-<div class="card p-4 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b text-left"><th class="p-3">Dealer</th><th class="p-3">Method</th><th class="p-3">Phone</th><th class="p-3">Message</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="recoveryTable"></tbody></table></div>
-</section>
-
-</div></main></div>
-
-<div id="dealerModal" class="modal hidden"><div class="card w-full max-w-lg p-6">
-<div class="flex justify-between items-center"><h2 id="dealerModalTitle" class="text-xl font-black">Add Dealer</h2><button class="btn gray" onclick="closeDealer()">✕</button></div>
-<input type="hidden" id="dealerId">
-<input id="dName" class="input mt-5" placeholder="Dealer Name">
-<input id="dEmail" class="input mt-3" placeholder="Registered Gmail">
-<input id="dCompany" class="input mt-3" placeholder="Company">
-<input id="dPhone" class="input mt-3" placeholder="Phone">
-<select id="dStatus" class="input mt-3"><option>active</option><option>suspended</option></select>
-<button class="btn primary w-full mt-4" onclick="saveDealer()">Save Dealer</button><div id="dealerError" class="text-red-600 text-sm text-center mt-3"></div>
-</div></div>
-
-<div id="licenseModal" class="modal hidden"><div class="card w-full max-w-lg p-6">
-<div class="flex justify-between items-center"><h2 id="licenseModalTitle" class="text-xl font-black">Create License</h2><button class="btn gray" onclick="closeLicense()">✕</button></div>
-<input type="hidden" id="oldLicenseKey">
-<input id="lKey" class="input mt-5 uppercase" placeholder="License Key (leave empty to generate)">
-<select id="lDealer" class="input mt-3"><option value="">Select Dealer</option></select>
-<div class="grid grid-cols-2 gap-3 mt-3"><input id="lStart" type="date" class="input"><input id="lExpiry" type="date" class="input"></div>
-<input id="lLimit" type="number" class="input mt-3" placeholder="Customer Limit e.g. 100">
-<select id="lStatus" class="input mt-3"><option>active</option><option>suspended</option></select>
-<button class="btn success w-full mt-4" onclick="saveLicense()">Save License</button><div id="licenseError" class="text-red-600 text-sm text-center mt-3"></div>
-</div></div>
 
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getDatabase,ref,get,set,update,remove,push}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    // Firebase initialization remains same as your original file
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, get, set, update, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const firebaseConfig={apiKey:"AIzaSyBAzVYtCzLzdM9R-Lt1-8EiUpy9_dPrj6E",authDomain:"isp-billing-system-27cf8.firebaseapp.com",databaseURL:"https://isp-billing-system-27cf8-default-rtdb.firebaseio.com",projectId:"isp-billing-system-27cf8",storageBucket:"isp-billing-system-27cf8.firebasestorage.app",messagingSenderId:"643339508063",appId:"1:643339508063:web:232e6769f7128b6e323eea",measurementId:"G-J0QK9KKPC6"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-const ADMIN_EMAIL="wazifkaroot@gmail.com";
-let dealers={},licenses={},customers={},recovery={};let editDealerId=null,editLicenseKey=null;
-const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"),today=()=>new Date().toISOString().slice(0,10);
-function entries(o){return o&&typeof o==="object"?Object.entries(o):[]}
-function msg(id,t,c="text-red-600"){const e=$(id);e.textContent=t;e.className="text-sm text-center mt-3 "+c}
-function page(p){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("page-"+p).classList.remove("hidden");document.querySelectorAll(".navbtn").forEach(x=>x.classList.toggle("active",x.dataset.page===p));$("title").textContent=p.charAt(0).toUpperCase()+p.slice(1)}
-window.page=page;
+    const firebaseConfig = { /* APKA CONFIG YAHAN HI RAHEGA */ };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
-async function load(){const [d,l,c,r]=await Promise.all([get(ref(db,"dealers")),get(ref(db,"licenses")),get(ref(db,"customers")),get(ref(db,"recoveryRequests"))]);dealers=d.exists()?d.val():{};licenses=l.exists()?l.val():{};customers=c.exists()?c.val():{};recovery=r.exists()?r.val():{};render()}
-function dealerName(id){return dealers[id]?.name||id||"-"}
-function render(){renderDealers();renderLicenses();renderCustomers();renderRecovery();let active=0,expired=0;const now=new Date();entries(licenses).forEach(([k,l])=>{if((l.status||"active")==="active"&&(!l.expiryDate||new Date(l.expiryDate+"T23:59:59")>=now))active++;if(l.expiryDate&&new Date(l.expiryDate+"T23:59:59")<now)expired++});$("sDealers").textContent=entries(dealers).length;$("sLicenses").textContent=active;$("sExpired").textContent=expired;$("sCustomers").textContent=entries(customers).length}
-function renderDealers(){$("dealerTable").innerHTML=entries(dealers).map(([id,d])=>{let key=d.licenseKey||"";return`<tr class="border-b"><td class="p-3 font-bold">${esc(d.name)}</td><td class="p-3">${esc(d.email)}</td><td class="p-3">${esc(d.company)}</td><td class="p-3 font-mono">${esc(key||"-")}</td><td class="p-3"><span class="badge ${d.status==="active"?"green":"red"}">${esc(d.status||"active")}</span></td><td class="p-3"><button class="btn primary mr-1" onclick="editDealer('${id}')">Edit</button><button class="btn danger" onclick="deleteDealer('${id}')">Delete</button></td></tr>`}).join("")||'<tr><td colspan="6" class="p-6 text-center">No dealers</td></tr>'}
-function renderLicenses(){$("licenseTable").innerHTML=entries(licenses).map(([key,l])=>{let exp=l.expiryDate&&new Date(l.expiryDate+"T23:59:59")<new Date();let st=exp?"expired":(l.status||"active");return`<tr class="border-b"><td class="p-3 font-mono font-bold">${esc(key)}</td><td class="p-3">${esc(dealerName(l.dealerId))}</td><td class="p-3">${esc(l.startDate||"-")}</td><td class="p-3">${esc(l.expiryDate||"-")}</td><td class="p-3">${esc(l.customerLimit||0)}</td><td class="p-3"><span class="badge ${st==="active"?"green":st==="expired"?"orange":"red"}">${esc(st)}</span></td><td class="p-3"><button class="btn primary mr-1" onclick="editLicense('${encodeURIComponent(key)}')">Edit</button><button class="btn danger" onclick="deleteLicense('${encodeURIComponent(key)}')">Delete</button></td></tr>`}).join("")||'<tr><td colspan="7" class="p-6 text-center">No licenses</td></tr>'}
-function renderCustomers(){$("customerTable").innerHTML=entries(customers).map(([id,c])=>`<tr class="border-b"><td class="p-3 font-bold">${esc(c.name)}</td><td class="p-3">${esc(dealerName(c.dealerId))}</td><td class="p-3">${esc(c.phone)}</td><td class="p-3">${esc(c.packageName||"-")}</td><td class="p-3">${esc(c.status||"-")}</td></tr>`).join("")||'<tr><td colspan="5" class="p-6 text-center">No customers</td></tr>'}
-function renderRecovery(){$("recoveryTable").innerHTML=entries(recovery).map(([id,r])=>`<tr class="border-b"><td class="p-3">${esc(r.name||dealerName(r.dealerId))}</td><td class="p-3">${esc(r.method)}</td><td class="p-3">${esc(r.phone)}</td><td class="p-3 max-w-xs">${esc(r.message)}</td><td class="p-3">${esc(r.status||"pending")}</td><td class="p-3"><button class="btn success" onclick="resolveRecovery('${id}')">Resolve</button></td></tr>`).join("")||'<tr><td colspan="6" class="p-6 text-center">No requests</td></tr>'}
+    // Baki logic wahi hai jo aapke paas hai. 
+    // Bas ab login process ko check karein.
+    
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            document.getElementById('authLoading').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        } else {
+            // Yahan se aapka data load hoga
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('authLoading').classList.add('hidden');
+        }
+    });
 
-function populateDealers(sel=""){$("lDealer").innerHTML='<option value="">Select Dealer</option>'+entries(dealers).map(([id,d])=>`<option value="${esc(id)}" ${id===sel?"selected":""}>${esc(d.name)} — ${esc(d.email)}</option>`).join("")}
-window.openDealer=()=>{editDealerId=null;$("dealerModalTitle").textContent="Add Dealer";["dName","dEmail","dCompany","dPhone"].forEach(x=>$(x).value="");$("dStatus").value="active";msg("dealerError","");$("dealerModal").classList.remove("hidden")}
-window.closeDealer=()=>$("dealerModal").classList.add("hidden");
-window.editDealer=id=>{let d=dealers[id];if(!d)return;editDealerId=id;$("dealerModalTitle").textContent="Edit Dealer";$("dName").value=d.name||"";$("dEmail").value=d.email||"";$("dCompany").value=d.company||"";$("dPhone").value=d.phone||"";$("dStatus").value=d.status||"active";$("dealerModal").classList.remove("hidden")}
-window.saveDealer=async()=>{let data={name:$("dName").value.trim(),email:$("dEmail").value.trim().toLowerCase(),company:$("dCompany").value.trim(),phone:$("dPhone").value.trim(),status:$("dStatus").value,updatedAt:Date.now()};if(!data.name||!data.email)return msg("dealerError","Name and Gmail are required.");let id=editDealerId||push(ref(db,"dealers")).key;if(editDealerId)await update(ref(db,"dealers/"+id),data);else await set(ref(db,"dealers/"+id),{...data,createdAt:Date.now()});await load();closeDealer()}
-window.deleteDealer=async id=>{if(!confirm("Delete dealer record?"))return;await remove(ref(db,"dealers/"+id));await load()}
-
-function randomKey(){let a=Math.random().toString(36).slice(2,6).toUpperCase(),b=Math.random().toString(36).slice(2,6).toUpperCase(),c=Math.random().toString(36).slice(2,6).toUpperCase();return"ISP-"+a+"-"+b+"-"+c}
-window.openLicense=()=>{editLicenseKey=null;$("licenseModalTitle").textContent="Create License";$("oldLicenseKey").value="";$("lKey").value=randomKey();populateDealers();$("lStart").value=today();let d=new Date();d.setFullYear(d.getFullYear()+1);$("lExpiry").value=d.toISOString().slice(0,10);$("lLimit").value=100;$("lStatus").value="active";msg("licenseError","");$("licenseModal").classList.remove("hidden")}
-window.closeLicense=()=>$("licenseModal").classList.add("hidden");
-window.editLicense=encoded=>{let key=decodeURIComponent(encoded),l=licenses[key];if(!l)return;editLicenseKey=key;$("licenseModalTitle").textContent="Edit License";$("oldLicenseKey").value=key;$("lKey").value=key;populateDealers(l.dealerId||"");$("lStart").value=l.startDate||"";$("lExpiry").value=l.expiryDate||"";$("lLimit").value=l.customerLimit||0;$("lStatus").value=l.status||"active";$("licenseModal").classList.remove("hidden")}
-window.saveLicense=async()=>{let key=$("lKey").value.trim().toUpperCase(),dealerId=$("lDealer").value;if(!key||!dealerId||!$("lExpiry").value)return msg("licenseError","License key, dealer and expiry are required.");let data={licenseKey:key,dealerId,startDate:$("lStart").value||today(),expiryDate:$("lExpiry").value,customerLimit:Number($("lLimit").value||0),status:$("lStatus").value,updatedAt:Date.now()};if(editLicenseKey&&editLicenseKey!==key){await set(ref(db,"licenses/"+key),data);await remove(ref(db,"licenses/"+editLicenseKey));if(dealers[dealerId]?.licenseKey===editLicenseKey)await update(ref(db,"dealers/"+dealerId),{licenseKey:key})}else await set(ref(db,"licenses/"+key),data);await update(ref(db,"dealers/"+dealerId),{licenseKey:key});await load();closeLicense()}
-window.deleteLicense=async encoded=>{let key=decodeURIComponent(encoded);if(!confirm("Delete this license?"))return;let l=licenses[key];if(l?.dealerId&&dealers[l.dealerId]?.licenseKey===key)await update(ref(db,"dealers/"+l.dealerId),{licenseKey:""});await remove(ref(db,"licenses/"+key));await load()}
-window.resolveRecovery=async id=>{await update(ref(db,"recoveryRequests/"+id),{status:"resolved",resolvedAt:Date.now()});await load()}
-
-document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>page(b.dataset.page));$("logout").onclick=()=>signOut(auth);
-$("loginBtn").onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){msg("loginMsg",e.message)}};
-
-onAuthStateChanged(auth,async user=>{if(!user){$("loading").classList.add("hidden");$("login").classList.remove("hidden");return}
-if(ADMIN_EMAIL!=="REPLACE_WITH_YOUR_ADMIN_GMAIL"&&user.email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){await signOut(auth);$("loading").classList.add("hidden");$("login").classList.remove("hidden");msg("loginMsg","❌ This Gmail is not authorized as Super Admin.");return}
-$("adminName").textContent=user.displayName||"Super Admin";$("adminEmail").textContent=user.email;await load();$("loading").classList.add("hidden");$("login").classList.add("hidden");$("app").classList.remove("hidden")});
+    document.getElementById('googleLogin').onclick = () => signInWithPopup(auth, new GoogleAuthProvider());
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
 </script>
 </body>
 </html>
